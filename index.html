@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Namu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#0a1410;
+    --bg-1:#0f1d17;
+    --moss:#6fa86f;
+    --moss-soft:rgba(111,168,111,0.16);
+    --amber:#e7c17a;
+    --ink-0:#eef2ef;
+    --ink-1:#a9b7af;
+    --glass-fill:rgba(255,255,255,0.045);
+    --glass-border:rgba(255,255,255,0.12);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html,body{
+    background:
+      radial-gradient(ellipse 90% 60% at 50% -10%, #16291f 0%, transparent 60%),
+      radial-gradient(ellipse 70% 50% at 85% 100%, #122019 0%, transparent 55%),
+      var(--bg-0);
+    color:var(--ink-0);
+    font-family:'Manrope', sans-serif;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+
+  /* faint drifting root/branch lines in the background */
+  .veins{
+    position:fixed; inset:0; z-index:0; pointer-events:none; opacity:0.35;
+  }
+
+  .page{
+    position:relative; z-index:1;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:6vh 6vw;
+  }
+
+  /* ---------- HOME ---------- */
+  #home{ flex-direction:column; gap:3.2rem; text-align:center; }
+
+  .logo-wrap{
+    display:flex; flex-direction:column; align-items:center; gap:1.1rem;
+    animation: riseIn 1.1s cubic-bezier(.16,1,.3,1) both;
+  }
+
+  .mark{
+    width:min(280px, 60vw);
+    height:auto;
+    filter: drop-shadow(0 18px 40px rgba(0,0,0,0.35));
+    cursor:pointer;
+    transition: transform .45s cubic-bezier(.34,1.56,.64,1), filter .35s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .mark:hover{
+    transform: rotate(-3deg) scale(1.05);
+    filter: drop-shadow(0 22px 46px rgba(0,0,0,0.4)) drop-shadow(0 0 28px rgba(111,168,111,0.25));
+  }
+  .mark:active, .mark.tapped{
+    transform: rotate(3deg) scale(0.94);
+  }
+  .mark:focus-visible{
+    outline:2px solid var(--moss);
+    outline-offset:6px;
+    border-radius:12px;
+  }
+
+  .wordmark{
+    font-family:'Fraunces', serif;
+    font-weight:420;
+    font-size:clamp(3rem, 9vw, 5.6rem);
+    letter-spacing:0.01em;
+    color:var(--ink-0);
+    line-height:1;
+  }
+
+  .tagline{
+    font-size:0.98rem;
+    color:var(--ink-1);
+    font-weight:500;
+    max-width:560px;
+    line-height:1.5;
+    letter-spacing:0.01em;
+    animation: riseIn 1.1s cubic-bezier(.16,1,.3,1) both;
+    animation-delay:0.08s;
+    transition: opacity .22s ease;
+  }
+
+  .tagline .quote-author{
+    display:block;
+    margin-top:0.5rem;
+    font-size:0.78rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--moss);
+    font-weight:700;
+  }
+
+  .logo-hint{
+    font-size:0.7rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-1);
+    opacity:0.55;
+  }
+
+  .actions{
+    display:flex;
+    gap:1.1rem;
+    flex-wrap:wrap;
+    justify-content:center;
+    animation: riseIn 1.1s cubic-bezier(.16,1,.3,1) both;
+    animation-delay:0.15s;
+  }
+
+  .glass-btn{
+    position:relative;
+    display:inline-flex;
+    align-items:center;
+    gap:0.6rem;
+    padding:1rem 2rem;
+    border-radius:999px;
+    background:var(--glass-fill);
+    border:1px solid var(--glass-border);
+    backdrop-filter:blur(18px) saturate(140%);
+    -webkit-backdrop-filter:blur(18px) saturate(140%);
+    color:var(--ink-0);
+    font-family:'Manrope', sans-serif;
+    font-weight:600;
+    font-size:0.95rem;
+    letter-spacing:0.01em;
+    text-decoration:none;
+    cursor:pointer;
+    overflow:hidden;
+    isolation:isolate;
+    transition: border-color .35s ease, transform .35s ease, box-shadow .35s ease;
+    box-shadow: 0 8px 30px -12px rgba(0,0,0,0.5);
+  }
+
+  .glass-btn::before{
+    content:"";
+    position:absolute; inset:0; z-index:-1;
+    background:linear-gradient(120deg, transparent 20%, rgba(255,255,255,0.16) 45%, transparent 70%);
+    transform:translateX(-130%);
+    transition:none;
+  }
+
+  .glass-btn:hover::before{
+    animation: sheen 1.1s ease forwards;
+  }
+
+  .glass-btn:hover{
+    border-color:rgba(255,255,255,0.28);
+    transform:translateY(-2px);
+    box-shadow: 0 14px 36px -14px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+  }
+
+  .glass-btn:active{ transform:translateY(0px) scale(0.98); }
+
+  .glass-btn:focus-visible{
+    outline:2px solid var(--moss);
+    outline-offset:3px;
+  }
+
+  .glass-btn.primary{
+    background: linear-gradient(160deg, rgba(143,201,160,0.22), rgba(143,201,160,0.06));
+    border-color: rgba(143,201,160,0.35);
+  }
+  .glass-btn.primary:hover{ border-color: rgba(143,201,160,0.6); }
+
+  .glass-btn svg{ width:18px; height:18px; flex-shrink:0; }
+
+  @keyframes sheen{
+    to{ transform:translateX(130%); }
+  }
+  @keyframes riseIn{
+    from{ opacity:0; transform:translateY(14px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  @keyframes sway{
+    0%,100%{ transform:rotate(-1.2deg); }
+    50%{ transform:rotate(1.2deg); }
+  }
+
+  /* ---------- MISSION ---------- */
+  #mission{ display:none; flex-direction:column; align-items:center; padding-top:4vh; }
+
+  .mission-wrap{ width:100%; max-width:760px; display:flex; flex-direction:column; align-items:center; }
+
+  .mission-lede{
+    font-family:'Fraunces', serif;
+    font-size:clamp(1.3rem, 3vw, 1.8rem);
+    font-weight:450;
+    line-height:1.45;
+    text-align:center;
+    max-width:640px;
+    color:var(--ink-0);
+    margin-bottom:3.6rem;
+    opacity:0;
+    animation: riseIn .8s cubic-bezier(.16,1,.3,1) forwards;
+    animation-delay:.05s;
+  }
+  .mission-lede em{
+    font-style:italic;
+    color:var(--moss);
+  }
+
+  /* ----- winding trail ----- */
+  .trail{
+    position:relative;
+    width:100%;
+    padding:2.6rem 0 1rem;
+  }
+
+  .trail-svg{
+    position:absolute;
+    top:0; left:0;
+    width:100%; height:100%;
+    z-index:0;
+    overflow:visible;
+  }
+
+  .trailhead{
+    position:absolute;
+    top:-1.8rem; left:50%;
+    transform:translateX(-50%);
+    font-size:1.5rem;
+    z-index:2;
+    animation: spinCompass 9s linear infinite;
+  }
+  @keyframes spinCompass{
+    0%,92%{ transform:translateX(-50%) rotate(0deg); }
+    96%{ transform:translateX(-50%) rotate(12deg); }
+    100%{ transform:translateX(-50%) rotate(-8deg); }
+  }
+
+  .doodle{
+    position:absolute;
+    font-size:1.3rem;
+    z-index:1;
+    opacity:0.85;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+  }
+
+  .waypoint{
+    position:relative;
+    display:flex;
+    margin-bottom:3.4rem;
+    z-index:1;
+  }
+  .waypoint:last-child{ margin-bottom:0; }
+  .waypoint.left{ justify-content:flex-start; }
+  .waypoint.right{ justify-content:flex-end; }
+
+  .wp-stamp{
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%) rotate(-4deg);
+    width:38px; height:38px;
+    border-radius:50% 50% 50% 4px;
+    background:var(--bg-0);
+    border:2px solid var(--moss);
+    color:var(--moss);
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:0.82rem;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:2;
+    box-shadow: 0 0 0 6px var(--bg-0), 0 4px 10px rgba(0,0,0,0.3);
+  }
+
+  .wp-card{
+    position:relative;
+    width:calc(50% - 46px);
+    background:var(--glass-fill);
+    border:1px solid var(--glass-border);
+    backdrop-filter:blur(16px) saturate(140%);
+    -webkit-backdrop-filter:blur(16px) saturate(140%);
+    border-radius:16px;
+    padding:1.5rem 1.6rem;
+    text-align:left;
+    opacity:0;
+    transition: border-color .3s ease, transform .3s ease;
+  }
+  .wp-card:hover{ border-color:rgba(111,168,111,0.5); }
+
+  .wp-card--left{ animation: riseInLeft .75s cubic-bezier(.16,1,.3,1) forwards; }
+  .wp-card--right{ animation: riseInRight .75s cubic-bezier(.16,1,.3,1) forwards; }
+  .waypoint:nth-child(2) .wp-card{ animation-delay:.15s; }
+  .waypoint:nth-child(3) .wp-card{ animation-delay:.3s; }
+
+  @keyframes riseInLeft{
+    from{ opacity:0; transform:translateY(16px) rotate(-1.3deg); }
+    to{ opacity:1; transform:translateY(0) rotate(-1.3deg); }
+  }
+  @keyframes riseInRight{
+    from{ opacity:0; transform:translateY(16px) rotate(1.3deg); }
+    to{ opacity:1; transform:translateY(0) rotate(1.3deg); }
+  }
+
+  .wp-connector{
+    position:absolute;
+    top:10px;
+    width:34px; height:34px;
+    z-index:1;
+    overflow:visible;
+  }
+  .wp-card--left .wp-connector{ right:-34px; }
+  .wp-card--right .wp-connector{ left:-34px; transform:scaleX(-1); }
+
+  .wp-tape{
+    position:absolute;
+    top:-10px;
+    width:46px; height:18px;
+    background:rgba(231,193,122,0.55);
+    border:1px solid rgba(231,193,122,0.7);
+    clip-path: polygon(4% 0%, 96% 8%, 100% 92%, 2% 100%);
+  }
+  .wp-card--left .wp-tape{ left:22px; transform:rotate(-5deg); }
+  .wp-card--right .wp-tape{ right:22px; transform:rotate(5deg); }
+
+  .wp-card{ clip-path: polygon(0 0, 100% 0, 100% 94%, 96% 100%, 0 100%); }
+
+  .wp-icon{ font-size:1.6rem; margin-bottom:0.55rem; }
+
+  .wp-card h3{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:1.12rem;
+    margin-bottom:0.45rem;
+    color:var(--ink-0);
+  }
+
+  .wp-card p{
+    font-size:0.87rem;
+    line-height:1.55;
+    color:var(--ink-1);
+  }
+
+  /* ----- destination ----- */
+  .destination{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    margin-top:1.2rem;
+    padding-top:2.6rem;
+    position:relative;
+  }
+  .destination::before{
+    content:"";
+    position:absolute;
+    top:0; left:50%;
+    width:2px; height:2.6rem;
+    transform:translateX(-50%);
+    background-image: linear-gradient(var(--glass-border) 60%, transparent 0%);
+    background-size: 2px 14px;
+    background-repeat: repeat-y;
+  }
+
+  .dest-flag{
+    font-size:1.7rem;
+    margin-bottom:1rem;
+    animation: sway 4s ease-in-out infinite;
+    transform-origin: 50% 90%;
+  }
+
+  .mission-branches{
+    display:flex;
+    gap:0.7rem;
+    flex-wrap:wrap;
+    justify-content:center;
+    margin-top:1.4rem;
+  }
+
+  .branch-pill{
+    font-size:0.74rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    font-weight:700;
+    color:var(--moss);
+    border:1px solid rgba(111,168,111,0.35);
+    background:var(--moss-soft);
+    padding:0.45rem 1rem;
+    border-radius:999px;
+  }
+
+  .mission-closing{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-size:1.1rem;
+    color:var(--ink-0);
+    text-align:center;
+    max-width:480px;
+  }
+
+  @media (max-width:680px){
+    .trail-svg{ display:none; }
+    .waypoint{ justify-content:center !important; margin-bottom:2.4rem; }
+    .wp-stamp{ position:static; transform:none; margin-bottom:0.7rem; box-shadow:none; }
+    .waypoint{ flex-direction:column; align-items:center; }
+    .wp-card{ width:100%; max-width:420px; }
+    .wp-card::after{ display:none; }
+    .wp-connector{ display:none; }
+    .trailhead{ display:none; }
+    .doodle{ display:none; }
+    .wp-card--left, .wp-card--right{ animation-name: riseIn; }
+  }
+
+  /* ---------- EMPLOYEES / HIERARCHY ---------- */
+  #employees{ display:none; flex-direction:column; align-items:center; gap:0; padding-top:4vh;}
+
+  .emp-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    width:100%;
+    max-width:1000px;
+    margin-bottom:3rem;
+  }
+
+  .back-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:0.5rem;
+    padding:0.65rem 1.2rem;
+    border-radius:999px;
+    background:var(--glass-fill);
+    border:1px solid var(--glass-border);
+    backdrop-filter:blur(14px);
+    color:var(--ink-1);
+    font-size:0.85rem;
+    font-weight:600;
+    text-decoration:none;
+    cursor:pointer;
+    transition: color .25s ease, border-color .25s ease;
+  }
+  .back-btn:hover{ color:var(--ink-0); border-color:rgba(255,255,255,0.25); }
+
+  .emp-title{
+    font-family:'Fraunces', serif;
+    font-size:clamp(1.6rem, 4vw, 2.4rem);
+    font-weight:450;
+  }
+
+  .tree{
+    width:100%;
+    max-width:1180px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:0;
+  }
+
+  .tier{
+    display:flex;
+    justify-content:center;
+    gap:1.4rem;
+    flex-wrap:wrap;
+    width:100%;
+    position:relative;
+    padding:2.1rem 0;
+  }
+
+  .tier::before{
+    content:"";
+    position:absolute;
+    top:0; left:50%;
+    width:1px; height:2.1rem;
+    background:linear-gradient(to bottom, transparent, var(--glass-border));
+  }
+  .tier:first-child::before{ display:none; }
+
+  .node{
+    background:var(--glass-fill);
+    border:1px solid var(--glass-border);
+    backdrop-filter:blur(16px) saturate(140%);
+    -webkit-backdrop-filter:blur(16px) saturate(140%);
+    border-radius:16px;
+    padding:0.95rem 1.4rem;
+    text-align:center;
+    min-width:148px;
+    max-width:220px;
+    opacity:0;
+    transform:translateY(10px);
+    animation: riseIn 0.7s cubic-bezier(.16,1,.3,1) forwards;
+    transition: border-color .3s ease, transform .3s ease;
+  }
+  .node:hover{ border-color:rgba(143,201,160,0.45); transform:translateY(-3px); }
+
+  .node.root{
+    background:linear-gradient(160deg, rgba(143,201,160,0.22), rgba(143,201,160,0.05));
+    border-color:rgba(143,201,160,0.4);
+    min-width:220px;
+    max-width:280px;
+  }
+
+  .node .role{
+    font-size:0.68rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--moss);
+    font-weight:700;
+    margin-bottom:0.3rem;
+  }
+  .node .name{
+    font-family:'Fraunces', serif;
+    font-size:1.05rem;
+    font-weight:500;
+    color:var(--ink-0);
+  }
+  .node .dept{
+    font-size:0.74rem;
+    color:var(--ink-1);
+    margin-top:0.15rem;
+    line-height:1.4;
+  }
+
+  @media (max-width:600px){
+    .tier{ gap:0.8rem; }
+    .node{ min-width:120px; padding:0.8rem 1rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<svg class="veins" viewBox="0 0 1200 800" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M600 800 C 600 600, 520 560, 480 420 C 450 320, 520 280, 500 180" stroke="#6fa86f" stroke-width="1" fill="none" opacity="0.25"/>
+  <path d="M600 800 C 600 600, 680 560, 720 420 C 750 320, 690 280, 710 160" stroke="#6fa86f" stroke-width="1" fill="none" opacity="0.2"/>
+  <path d="M480 420 C 440 400, 400 410, 360 370" stroke="#6fa86f" stroke-width="1" fill="none" opacity="0.15"/>
+  <path d="M720 420 C 760 400, 800 410, 840 370" stroke="#6fa86f" stroke-width="1" fill="none" opacity="0.15"/>
+</svg>
+
+<!-- HOME -->
+<main class="page" id="home">
+  <div class="logo-wrap">
+    <img class="mark" src="assets/namu-logo.png" alt="Namu logo — click for a new quote" role="button" tabindex="0" onclick="setRandomQuote()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();setRandomQuote();}" />
+    <p class="tagline" id="quote-line">Rooted in community</p>
+    <span class="logo-hint">tap the tree for a new quote</span>
+  </div>
+
+  <nav class="actions">
+    <a class="glass-btn primary" href="https://instagram.com/namuorg" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg>
+      Follow on Instagram
+    </a>
+    <button class="glass-btn" onclick="showPage('mission')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+      Our Mission
+    </button>
+    <button class="glass-btn" onclick="showPage('employees')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="6" r="2.6"/><circle cx="5.5" cy="18" r="2.2"/><circle cx="18.5" cy="18" r="2.2"/><path d="M12 8.6V13M12 13L6.4 16.2M12 13l5.6 3.2"/></svg>
+      Meet the Team
+    </button>
+  </nav>
+</main>
+
+<!-- MISSION -->
+<section class="page" id="mission" style="display:none;">
+  <div class="mission-wrap">
+    <div class="emp-header">
+      <button class="back-btn" onclick="showPage('home')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        Back home
+      </button>
+      <h2 class="emp-title">Our Mission</h2>
+      <span style="width:96px;"></span>
+    </div>
+
+    <div class="mission-lede">
+      Young people are already changing their communities — quietly, with little recognition. <em>Namu exists to make sure they're remembered.</em>
+    </div>
+
+    <div class="trail">
+      <span class="trailhead">🧭</span>
+      <svg class="trail-svg" viewBox="0 0 100 700" preserveAspectRatio="none">
+        <path d="M50,10 C20,80 80,140 50,210 C20,280 80,340 50,410 C20,480 80,540 50,610 C30,650 50,670 50,690"
+          fill="none" stroke="#6fa86f" stroke-width="2.2" stroke-linecap="round"
+          stroke-dasharray="1 9" opacity="0.55"/>
+      </svg>
+      <span class="doodle" style="top:6%; left:20%;">🍃</span>
+      <span class="doodle" style="top:30%; right:14%;">👣</span>
+      <span class="doodle" style="top:54%; left:16%;">🍃</span>
+      <span class="doodle" style="top:78%; right:18%;">👣</span>
+
+      <div class="waypoint left">
+        <span class="wp-stamp">01</span>
+        <div class="wp-card wp-card--left">
+          <svg class="wp-connector" viewBox="0 0 34 34"><path d="M0,8 Q24,8 24,34" fill="none" stroke="#6fa86f" stroke-width="2" stroke-dasharray="1 6" stroke-linecap="round" opacity="0.6"/></svg>
+          <span class="wp-tape"></span>
+          <div class="wp-icon">🌱</div>
+          <h3>Recognize</h3>
+          <p>We feature young changemakers on social media so their work gets seen — proof of how much youth are already tackling the problems in their own communities.</p>
+        </div>
+      </div>
+
+      <div class="waypoint right">
+        <span class="wp-stamp">02</span>
+        <div class="wp-card wp-card--right">
+          <svg class="wp-connector" viewBox="0 0 34 34"><path d="M0,8 Q24,8 24,34" fill="none" stroke="#6fa86f" stroke-width="2" stroke-dasharray="1 6" stroke-linecap="round" opacity="0.6"/></svg>
+          <span class="wp-tape"></span>
+          <div class="wp-icon">🌍</div>
+          <h3>Connect</h3>
+          <p>Our international fellowship links student changemakers across Namu USA, Namu Indonesia, and Namu Korea — weekly meetings turn distance into real conversation.</p>
+        </div>
+      </div>
+
+      <div class="waypoint left">
+        <span class="wp-stamp">03</span>
+        <div class="wp-card wp-card--left">
+          <svg class="wp-connector" viewBox="0 0 34 34"><path d="M0,8 Q24,8 24,34" fill="none" stroke="#6fa86f" stroke-width="2" stroke-dasharray="1 6" stroke-linecap="round" opacity="0.6"/></svg>
+          <span class="wp-tape"></span>
+          <div class="wp-icon">📷</div>
+          <h3>Reveal</h3>
+          <p>On Instagram, <strong>@namuorg</strong> shows the many ways students volunteer around the world, and the issues this generation actually cares about.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="destination">
+      <div class="dest-flag">🏁</div>
+      <p class="mission-closing">A social media page built by youth changemakers, for youth changemakers.</p>
+      <div class="mission-branches">
+        <span class="branch-pill">Namu USA</span>
+        <span class="branch-pill">Namu Indonesia</span>
+        <span class="branch-pill">Namu Korea</span>
+      </div>
+      <a class="glass-btn primary" href="https://instagram.com/namuorg" target="_blank" rel="noopener" style="margin-top:1.4rem;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg>
+        See our work on Instagram
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- EMPLOYEES -->
+<section class="page" id="employees">
+  <div style="display:flex; flex-direction:column; align-items:center; width:100%;">
+    <div class="emp-header">
+      <button class="back-btn" onclick="showPage('home')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        Back home
+      </button>
+      <h2 class="emp-title">Our Team</h2>
+      <span style="width:96px;"></span>
+    </div>
+
+    <div class="tree">
+      <div class="tier" style="animation-delay:.05s">
+        <div class="node root" style="animation-delay:.1s">
+          <div class="role">Founder</div>
+          <div class="name">Jayden Kim</div>
+          <div class="dept">Irvine, California, USA</div>
+          <div class="dept">Executive Direction &amp; President of Namu USA</div>
+        </div>
+        <div class="node root" style="animation-delay:.16s">
+          <div class="role">Founder</div>
+          <div class="name">Sophie Gwak</div>
+          <div class="dept">El Paso, Texas, USA</div>
+          <div class="dept">Director of International Relations, President of Namu Indonesia (2024–25)</div>
+        </div>
+      </div>
+
+      <div class="tier">
+        <div class="node" style="animation-delay:.26s">
+          <div class="role">President</div>
+          <div class="name">Junwoo Park</div>
+          <div class="dept">Surabaya, Indonesia</div>
+          <div class="dept">President of Namu Indonesia</div>
+        </div>
+        <div class="node" style="animation-delay:.32s">
+          <div class="role">President</div>
+          <div class="name">Ian Min</div>
+          <div class="dept">Incheon, Republic of Korea</div>
+          <div class="dept">President of Namu Korea</div>
+        </div>
+      </div>
+
+      <div class="tier">
+        <div class="node" style="animation-delay:.42s">
+          <div class="role">Vice President</div>
+          <div class="name">Nour-Eldin Elshahawi</div>
+          <div class="dept">Irvine, California, USA</div>
+          <div class="dept">Vice President of Namu USA, Video Director</div>
+        </div>
+        <div class="node" style="animation-delay:.48s">
+          <div class="role">Vice President</div>
+          <div class="name">Joann Bernardi</div>
+          <div class="dept">Surabaya, Indonesia</div>
+          <div class="dept">Vice President of Namu Indonesia</div>
+        </div>
+        <div class="node" style="animation-delay:.54s">
+          <div class="role">Vice President</div>
+          <div class="name">Ashley Hoeun Pyeon</div>
+          <div class="dept">Incheon, Republic of Korea</div>
+          <div class="dept">Vice President of Namu Korea</div>
+        </div>
+        <div class="node" style="animation-delay:.6s">
+          <div class="role">Director</div>
+          <div class="name">Katelyn Chang</div>
+          <div class="dept">Irvine, California, USA</div>
+          <div class="dept">Research Director</div>
+        </div>
+        <div class="node" style="animation-delay:.66s">
+          <div class="role">Advisor</div>
+          <div class="name">Sophie Sukendro</div>
+          <div class="dept">Namu Indonesia</div>
+          <div class="dept">Advisor to Namu Indonesia</div>
+        </div>
+      </div>
+
+      <div class="tier">
+        <div class="node" style="animation-delay:.76s"><div class="role">Fellowship Member</div><div class="name">Annabella Joesoef</div><div class="dept">Namu Indonesia</div></div>
+        <div class="node" style="animation-delay:.78s"><div class="role">Fellowship Member</div><div class="name">Yun Ji Choi</div><div class="dept">Namu Indonesia</div></div>
+        <div class="node" style="animation-delay:.8s"><div class="role">Fellowship Member</div><div class="name">Yoo Min Bark</div><div class="dept">Namu Indonesia</div></div>
+        <div class="node" style="animation-delay:.82s"><div class="role">Fellowship Member</div><div class="name">William Chandra</div><div class="dept">Namu Indonesia</div></div>
+        <div class="node" style="animation-delay:.84s"><div class="role">Fellowship Member</div><div class="name">Henry Song</div><div class="dept">Namu Indonesia</div></div>
+        <div class="node" style="animation-delay:.86s"><div class="role">Fellowship Member</div><div class="name">Ellyse Sentosa</div><div class="dept">Namu Indonesia</div></div>
+        <div class="node" style="animation-delay:.88s"><div class="role">Fellowship Member</div><div class="name">Samuel Sentosa</div><div class="dept">Namu Indonesia</div></div>
+        <div class="node" style="animation-delay:.9s"><div class="role">Fellowship Member</div><div class="name">Robert Gwak</div><div class="dept">Namu Indonesia</div></div>
+        <div class="node" style="animation-delay:.92s"><div class="role">Fellowship Member</div><div class="name">Manu Gurudath</div><div class="dept">Namu USA</div></div>
+        <div class="node" style="animation-delay:.94s"><div class="role">Fellowship Member</div><div class="name">Kailani Song</div><div class="dept">Namu USA</div></div>
+        <div class="node" style="animation-delay:.96s"><div class="role">Fellowship Member</div><div class="name">Justin Liu</div><div class="dept">Namu USA</div></div>
+        <div class="node" style="animation-delay:.98s"><div class="role">Fellowship Member</div><div class="name">Mia Reyes</div><div class="dept">Namu USA</div></div>
+        <div class="node" style="animation-delay:1s"><div class="role">Fellowship Member</div><div class="name">Natalya Vukmanovic</div><div class="dept">Namu USA</div></div>
+        <div class="node" style="animation-delay:1.02s"><div class="role">Fellowship Member</div><div class="name">Maxwell Lee</div><div class="dept">Namu USA</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function showPage(id){
+    ['home','mission','employees'].forEach(p => {
+      document.getElementById(p).style.display = (p === id) ? 'flex' : 'none';
+    });
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+</script>
+<script>
+  const QUOTES = [
+    { text: "No one is too small to make a difference.", author: "Greta Thunberg" },
+    { text: "Young people are not just the future — they're the present.", author: "Malala Yousafzai" },
+    { text: "One child, one teacher, one book, one pen can change the world.", author: "Malala Yousafzai" },
+    { text: "The youth of today are the architects of tomorrow.", author: "Kwame Nkrumah" },
+    { text: "We don't inherit the future — we build it, starting now.", author: "Severn Cullis-Suzuki" },
+    { text: "Young people deserve a seat at the table where decisions are made.", author: "Autumn Peltier" },
+    { text: "Change doesn't wait for permission, and neither should young people.", author: "Emma González" },
+    { text: "Every generation has the power to remake the world it inherits.", author: "Barack Obama" },
+    { text: "The young do not know enough to be prudent, and therefore they attempt the impossible — and achieve it.", author: "Pearl S. Buck" },
+    { text: "It always seems impossible until it's young people who do it.", author: "Nelson Mandela (adapted)" },
+    { text: "A small group of committed young people can shift the direction of history.", author: "Margaret Mead (adapted)" },
+    { text: "The energy of youth, pointed at injustice, is unstoppable.", author: "Marley Dias" },
+    { text: "Don't wait for leaders — be the leader you're waiting for.", author: "Anonymous" },
+    { text: "Youth is not a time of life, it's a state of mind.", author: "Samuel Ullman (adapted)" },
+    { text: "We are not the leaders of tomorrow. We are the leaders of today.", author: "Vanessa Nakate" },
+    { text: "Activism is contagious, especially among the young.", author: "Anonymous" },
+    { text: "If you think you're too small to make an impact, try sleeping with a mosquito in the room.", author: "African Proverb" },
+    { text: "The young always have the same problem — how to rebel and conform at the same time.", author: "Quentin Crisp" },
+    { text: "Tell me, what is it you plan to do with your one wild and precious life?", author: "Mary Oliver" },
+    { text: "We are facing a sustainability crisis, and youth voices are the loudest call to action.", author: "Xiuhtezcatl Martinez" },
+    { text: "There's no such thing as too young to make history.", author: "Anonymous" },
+    { text: "The children of today will make the world of tomorrow.", author: "Janusz Korczak" },
+    { text: "Real change happens when ordinary young people decide they've had enough.", author: "Anonymous" },
+    { text: "We may be young, but we understand that the future is in our hands.", author: "Greta Thunberg (adapted)" },
+    { text: "Education is the most powerful weapon we can use to change the world.", author: "Nelson Mandela" },
+    { text: "Youth ends not when you reach a certain age, but the moment you stop dreaming.", author: "Anonymous" },
+    { text: "Young people have the power to demand a future they actually want to live in.", author: "Jamie Margolin" },
+    { text: "Every act of resistance, however small, plants a seed for change.", author: "Anonymous" },
+    { text: "We're not just inheriting the planet — we're fighting to save it.", author: "Vanessa Nakate (adapted)" },
+    { text: "When young people lead, communities follow.", author: "Anonymous" },
+    { text: "It is not the strength of the body, but the strength of the spirit that moves the world.", author: "Vincent Van Gogh" },
+    { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+    { text: "Be the change you wish to see in the world.", author: "Mahatma Gandhi (attributed)" },
+    { text: "Young people have always been at the front lines of social change.", author: "Bernice Albertine King" },
+    { text: "Hope is a discipline practiced loudest by the young.", author: "Anonymous" },
+    { text: "We grow great by dreams that others said were impossible.", author: "Woodrow Wilson" },
+    { text: "Every revolution begins with a few people who refuse to accept things as they are.", author: "Anonymous" },
+    { text: "The young people of today are walking into rooms older generations were never invited to.", author: "Anonymous" },
+    { text: "What you do today can improve all your tomorrows.", author: "Ralph Marston" },
+    { text: "Growing up means realizing how many people came before you fighting for what's right — and joining them.", author: "Anonymous" }
+  ];
+
+  let lastQuoteIndex = -1;
+  function setRandomQuote(){
+    const el = document.getElementById('quote-line');
+    let idx;
+    do { idx = Math.floor(Math.random() * QUOTES.length); } while (idx === lastQuoteIndex && QUOTES.length > 1);
+    lastQuoteIndex = idx;
+    const pick = QUOTES[idx];
+    el.style.opacity = '0';
+    setTimeout(() => {
+      el.innerHTML = '"' + pick.text + '"<span class="quote-author">— ' + pick.author + '</span>';
+      el.style.opacity = '1';
+    }, 220);
+  }
+  setRandomQuote();
+</script>
+</body>
+</html>
